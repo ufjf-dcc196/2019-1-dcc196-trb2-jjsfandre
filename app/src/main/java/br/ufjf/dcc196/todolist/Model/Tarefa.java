@@ -6,7 +6,7 @@ public class Tarefa {
     private String titulo;
     private String descricao;
     private int dificuldade;
-    private long statusId;
+    private Long statusId;
     private Status status;
     private String dataHoraLimite;
     private String dataHoraAtualizacao;
@@ -15,13 +15,22 @@ public class Tarefa {
     public Tarefa() {
     }
 
-    public Tarefa(Long id, String titulo, String descricao, int dificuldade, long statusId, Status status, String dataHoraLimite, String dataHoraAtualizacao) {
+    public Tarefa(Long id, String titulo, String descricao, int dificuldade, Long statusId, Status status, String dataHoraLimite, String dataHoraAtualizacao) {
         this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
         this.dificuldade = dificuldade;
         this.statusId = statusId;
         this.status = status;
+        this.dataHoraLimite = dataHoraLimite;
+        this.dataHoraAtualizacao = dataHoraAtualizacao;
+    }
+    public Tarefa(Long id, String titulo, String descricao, int dificuldade, Long statusId, String dataHoraLimite, String dataHoraAtualizacao) {
+        this.id = id;
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.dificuldade = dificuldade;
+        this.statusId = statusId;
         this.dataHoraLimite = dataHoraLimite;
         this.dataHoraAtualizacao = dataHoraAtualizacao;
     }
@@ -60,11 +69,11 @@ public class Tarefa {
         this.dificuldade = dificuldade;
     }
 
-    public long getStatusId() {
+    public Long getStatusId() {
         return statusId;
     }
 
-    public void setStatusId(long statusId) {
+    public void setStatusId(Long statusId) {
         this.statusId = statusId;
     }
 
@@ -93,4 +102,19 @@ public class Tarefa {
     }
 
     //endregion
+
+
+    @Override
+    public String toString() {
+        return "Tarefa{" +
+                "id=" + id +
+                ", titulo='" + titulo + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", dificuldade=" + dificuldade +
+                ", statusId=" + statusId +
+                ", status=" + status +
+                ", dataHoraLimite='" + dataHoraLimite + '\'' +
+                ", dataHoraAtualizacao='" + dataHoraAtualizacao + '\'' +
+                '}';
+    }
 }
