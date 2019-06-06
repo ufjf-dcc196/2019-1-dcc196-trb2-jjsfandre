@@ -16,26 +16,14 @@ import br.ufjf.dcc196.todolist.Model.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+    private void listAllData(){
         ToDoListDBHelper helper = new ToDoListDBHelper(getApplicationContext());
         SQLiteDatabase db = helper.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(ToDoListContract.Tarefa.COLLUMN_TITULO,"Fazer compras");
-        values.put(ToDoListContract.Tarefa.COLLUMN_DESCRICAO,"Ir ao mercado fazer compras");
-        values.put(ToDoListContract.Tarefa.COLLUMN_DIFICULDADE,1);
-        values.put(ToDoListContract.Tarefa.COLLUMN_DTHORALIMITE,"30/05/2019 12:00");
-        String dtHrNow = new Date().toString();
-        values.put(ToDoListContract.Tarefa.COLLUMN_DTHORAATUALIZACAO,dtHrNow);
-        values.put(ToDoListContract.Tarefa.COLLUMN_STATUSID,2);
-        long novoId = db.insert(ToDoListContract.Tarefa.TABLE_NAME,null,values);
-        Toast.makeText(this, "Novo registro criado com id:"+novoId, Toast.LENGTH_LONG).show();
-
-
+        listTarefa(db);
+        listTag(db);
+        listStatus(db);
+    }
+    private void listTarefa(SQLiteDatabase db){
         String[] campos ={
                 ToDoListContract.Tarefa._ID,
                 ToDoListContract.Tarefa.COLLUMN_TITULO,
@@ -72,7 +60,63 @@ public class MainActivity extends AppCompatActivity {
             tarefas.add(t);
 
         }
-        TextView txtTarefas = findViewById(R.id.txtTarefas);
-        txtTarefas.setText(tarefas.toString());
+        TextView txtOutput = findViewById(R.id.txtTarefas);
+        txtOutput.setText(tarefas.toString());
+    }
+
+    private void listTag(SQLiteDatabase db){
+        String[] campos ={
+                ToDoListContract.Tag._ID,
+                ToDoListContract.Tag.COLLUMN_NOME
+        };
+        Cursor c = db.query(ToDoListContract.Tag.TABLE_NAME,campos,null,null,null,null,null);
+        int idxId = c.getColumnIndex(ToDoListContract.Tag._ID);
+        int idxNome = c.getColumnIndex(ToDoListContract.Tag.COLLUMN_NOME);
+        c.move(-1);
+
+        List<Tag> tags = new ArrayList<>();
+        while(c.moveToNext()){
+            Long id = c.getLong(idxId);
+            String nome = c.getString(idxNome);
+
+            System.out.println(String.format("%x %s \n",id,nome));
+            Tag t = new Tag(id,nome);
+            tags.add(t);
+
+        }
+        TextView txtOutput = findViewById(R.id.txtTags);
+        txtOutput.setText(tags.toString());
+    }
+
+    private void listStatus(SQLiteDatabase db){
+        String[] campos ={
+                ToDoListContract.Status._ID,
+                ToDoListContract.Status.COLLUMN_NOME
+        };
+        Cursor c = db.query(ToDoListContract.Status.TABLE_NAME,campos,null,null,null,null,null);
+        int idxId = c.getColumnIndex(ToDoListContract.Status._ID);
+        int idxNome = c.getColumnIndex(ToDoListContract.Status.COLLUMN_NOME);
+        c.move(-1);
+
+        List<Status> tags = new ArrayList<>();
+        while(c.moveToNext()){
+            Long id = c.getLong(idxId);
+            String nome = c.getString(idxNome);
+
+            System.out.println(String.format("%x %s \n",id,nome));
+            Status s = new Status(id,nome);
+            tags.add(s);
+
+        }
+        TextView txtOutput = findViewById(R.id.txtStatus);
+        txtOutput.setText(tags.toString());
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        listAllData();
+
     }
 }

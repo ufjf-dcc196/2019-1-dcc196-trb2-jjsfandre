@@ -31,4 +31,13 @@ public class Tag {
         this.nome = nome;
     }
     //endregion
+
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                '}';
+    }
 }

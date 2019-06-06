@@ -31,4 +31,13 @@ public class Status {
         this.nome = nome;
     }
     //endregion
+
+
+    @Override
+    public String toString() {
+        return "Status{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                '}';
+    }
 }
