@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import br.ufjf.dcc196.todolist.Model.Status;
+import br.ufjf.dcc196.todolist.Model.Tag;
 import br.ufjf.dcc196.todolist.Model.Tarefa;
 
 public class ToDoListDBHelper extends SQLiteOpenHelper {
@@ -256,6 +257,21 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         db.insert(ToDoListContract.Tarefa.TABLE_NAME,null,values);
     }
 
+    public void inserirTag(Tag t){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = populateContentValueTag(t);
+
+        db.insert(ToDoListContract.Tag.TABLE_NAME,null,values);
+    }
+
+    private ContentValues populateContentValueTag(Tag t){
+
+        ContentValues values = new ContentValues();
+        values.put(ToDoListContract.Tag.COLLUMN_NOME,t.getNome());
+
+        return values;
+
+    }
     private ContentValues populateContentValueTarefa(Tarefa t){
 
         ContentValues values = new ContentValues();
