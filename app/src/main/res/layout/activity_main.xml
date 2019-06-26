@@ -61,10 +61,12 @@
         app:maxImageSize="61dp"
         app:pressedTranslationZ="0dp"
         app:rippleColor="#00F08484"
-        app:srcCompat="@mipmap/open_menu_foreground" />
+        app:srcCompat="@mipmap/open_menu_foreground"
+        android:layout_marginLeft="371dp"
+        android:layout_marginRight="16dp" />
 
     <Switch
-        android:id="@+id/switchExcluir"
+        android:id="@+id/switchExcluirTarefa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="200dp"

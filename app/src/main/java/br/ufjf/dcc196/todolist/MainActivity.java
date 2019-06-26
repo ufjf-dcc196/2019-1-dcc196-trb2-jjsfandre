@@ -11,6 +11,8 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -125,7 +127,17 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Switch switch1 = (Switch)findViewById(R.id.switchExcluirTarefa);
 
+        switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    tAdapter.setOnItemClickListener(listenerDeleteTarefa);
+                else
+                    tAdapter.setOnItemClickListener(listenerEditTarefa);
+            }
+        });
 
         final RecyclerView rv = findViewById(R.id.rvTarefas);
         ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
@@ -165,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     dbHelper.deleteTarefaById(txtId.getText().toString(), txtTitulo.getText().toString());
 
                     tAdapter.setCursor(dbHelper.getCursorTodasAsTarefas());
-                    tAdapter.notifyItemRemoved(position);
+                    tAdapter.notifyItemRemoved(position); 
                 }
             };
 
