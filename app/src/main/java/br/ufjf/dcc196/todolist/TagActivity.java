@@ -110,9 +110,11 @@ public class TagActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
                 @Override
                 public void onItemClick(View itemView, int position){
                     TextView txtId = (TextView) itemView.findViewById(R.id.txtIdTag);
+                    TextView txtTitulo = (TextView) itemView.findViewById(R.id.txtTituloTag);
 
                     Intent intent = new Intent(TagActivity.this, ListaTarefasByTagActivity.class);
                     intent.putExtra("idTag", txtId.getText().toString());
+                    intent.putExtra("tituloTag", txtTitulo.getText().toString());
 
                     startActivityForResult(intent, REQUEST_LISTAR_TAREFAS_TAG);
                 }
