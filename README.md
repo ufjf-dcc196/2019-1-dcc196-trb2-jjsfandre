@@ -34,13 +34,8 @@ Foram criadas três classes, uma para cada tabela principal do banco:
 * Tag
 * Tarefa 
 
-Além dos atributos básicos de cada classe (seguindo a especificação) foram criados atributos para linkar cada classe quando necessário
-de acordo com o relacionamento que suas respectivas tabelas tem em banco. São eles:
+Além dos atributos básicos de cada classe (seguindo a especificação) foi criado o atributo statusId na classe Tarefa para linkar esta classe
+com a classe Status e identificar rapidamente em que status está a tarefa.
 
-* Status
-* Tag
-
-* Tarefa 
-	> statusId (Referenciando um objeto da classe Status)
 
 
