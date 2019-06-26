@@ -7,12 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import br.ufjf.dcc196.todolist.Model.Status;
+import br.ufjf.dcc196.todolist.Model.Tarefa;
 
 public class ToDoListDBHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION=5;
+    public static final int DATABASE_VERSION=6;
     public static final String DATABASE_NAME="ToDoList";
 
     public ToDoListDBHelper(Context context){
@@ -57,7 +60,7 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         values.put(ToDoListContract.Tarefa.COLLUMN_DESCRICAO,"Ir ao mercado fazer compras");
         values.put(ToDoListContract.Tarefa.COLLUMN_DIFICULDADE,1);
         values.put(ToDoListContract.Tarefa.COLLUMN_DTHORALIMITE,"30/07/2019 12:00");
-        String dtHrNow = new Date().toString();
+        String dtHrNow = Helper.getDataHoraAtualFormatada();
         values.put(ToDoListContract.Tarefa.COLLUMN_DTHORAATUALIZACAO,dtHrNow);
         values.put(ToDoListContract.Tarefa.COLLUMN_STATUSID,idStatusAFazer);
         values2.put(ToDoListContract.Tarefa.COLLUMN_TITULO,"Estudar");
@@ -178,6 +181,70 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         return status;
     }
 
+    public List<Status> getAllStatusList(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor c = db.query(ToDoListContract.Status.TABLE_NAME,camposStatus,null,null,null,null,null);
+        int idxId = c.getColumnIndex(ToDoListContract.Status._ID);
+        int idxNome = c.getColumnIndex(ToDoListContract.Status.COLLUMN_NOME);
+        c.move(-1);
+
+        List<Status> statusList = new ArrayList<>();
+        while(c.moveToNext()){
+            Long id = c.getLong(idxId);
+            String nome = c.getString(idxNome);
+
+            System.out.println(String.format("%x %s \n",id,nome));
+            Status s = new Status(id,nome);
+            statusList.add(s);
+
+        }
+
+        return statusList;
+    }
+
+    public Tarefa getTarefaById(String id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selecao = ToDoListContract.Tarefa._ID+ "= ?";
+        String[] args = {id};
+
+        Cursor c = db.query(ToDoListContract.Tarefa.TABLE_NAME,camposTarefa,selecao,args,null,null,null);
+        c.moveToFirst();
+        int idxId = c.getColumnIndex(ToDoListContract.Tarefa._ID);
+        int idxTitulo = c.getColumnIndex(ToDoListContract.Tarefa.COLLUMN_TITULO);
+        int idxDescricao = c.getColumnIndex(ToDoListContract.Tarefa.COLLUMN_DESCRICAO);
+        int idxDificuldade = c.getColumnIndex(ToDoListContract.Tarefa.COLLUMN_DIFICULDADE);
+        int idxDtHrLimite = c.getColumnIndex(ToDoListContract.Tarefa.COLLUMN_DTHORALIMITE);
+        int idxDtHrAtualizacao = c.getColumnIndex(ToDoListContract.Tarefa.COLLUMN_DTHORAATUALIZACAO);
+        int idxStatusId = c.getColumnIndex(ToDoListContract.Tarefa.COLLUMN_STATUSID);
+        Long idTarefa = c.getLong(idxId);
+        String titulo = c.getString(idxTitulo);
+        String descricao = c.getString(idxDescricao);
+        Integer dificuldade = c.getInt(idxDificuldade);
+        String dtHrLimite = c.getString(idxDtHrLimite);
+        String dtHrAtualizacao = c.getString(idxDtHrAtualizacao);
+        Long statusId = c.getLong(idxStatusId);
+
+
+        return new Tarefa(idTarefa,titulo,descricao,dificuldade,statusId,dtHrLimite,dtHrAtualizacao);
+    }
+
+    public void atualizarTarefa(Tarefa t){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ToDoListContract.Tarefa.COLLUMN_TITULO,t.getTitulo());
+        values.put(ToDoListContract.Tarefa.COLLUMN_DESCRICAO,t.getDescricao());
+        values.put(ToDoListContract.Tarefa.COLLUMN_DIFICULDADE,t.getDificuldade());
+        values.put(ToDoListContract.Tarefa.COLLUMN_DTHORALIMITE,t.getDataHoraLimite());
+        values.put(ToDoListContract.Tarefa.COLLUMN_DTHORAATUALIZACAO,Helper.getDataHoraAtualFormatada());
+        values.put(ToDoListContract.Tarefa.COLLUMN_STATUSID,t.getStatusId());
+
+        String selecao = ToDoListContract.Tarefa._ID+ "= ?";
+        String[] args = {t.getId()+""};
+
+        db.update(ToDoListContract.Tarefa.TABLE_NAME,values,selecao, args);
+    };
+
 
 
     private final String[] camposTarefa = {
@@ -190,6 +257,7 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
             ToDoListContract.Tarefa.COLLUMN_STATUSID
     };
     private final String[] camposTarefaTag = {
+            ToDoListContract.TarefaTag._ID,
             ToDoListContract.TarefaTag.COLLUMN_TAG,
             ToDoListContract.TarefaTag.COLLUMN_TAREFA
     };

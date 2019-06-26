@@ -23,10 +23,54 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.047" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:collapseColumns="*"
+        android:stretchColumns="*"
+        app:layout_constraintBottom_toTopOf="@+id/rvTarefas"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/headerTituloTarefa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_span="3"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Tarefa"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txtStatusTarefa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_span="3"
+            android:layout_weight="2"
+            android:padding="5dp"
+            android:text="Status"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txtIdTarefa"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_span="3"
+            android:layout_weight="0"
+            android:padding="5dp"
+            android:text="id"
+            android:textSize="18sp"
+            android:visibility="invisible"
+            tools:visibility="invisible" />
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvTarefas"
         android:layout_width="0dp"
-        android:layout_height="360dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="30dp"
@@ -76,6 +120,8 @@
         android:layout_marginRight="24dp"
         android:layout_marginBottom="8dp"
         android:text="Excluir tarefas ao clicar"
+        android:textColorHighlight="#00564A"
+        android:textColorLink="#008477"
         app:layout_constraintBottom_toTopOf="@+id/rvTarefas"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

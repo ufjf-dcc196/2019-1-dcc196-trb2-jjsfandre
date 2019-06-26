@@ -48,8 +48,8 @@ public final class ToDoListContract {
         public static final String COLLUMN_TAG ="tagid";
         public static final String COLLUMN_TAREFA="tarefaid";
 
-        public static final String CREATE_TABLE=String.format("CREATE TABLE %s (%s INTEGER," +
-                "%s INTEGER)",TABLE_NAME, COLLUMN_TAG,COLLUMN_TAREFA
+        public static final String CREATE_TABLE=String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT,%s INTEGER," +
+                "%s INTEGER)",TABLE_NAME,_ID, COLLUMN_TAG,COLLUMN_TAREFA
         );
         public static final String DROP_TABLE=String.format("DROP TABLE %s", TABLE_NAME);
     }

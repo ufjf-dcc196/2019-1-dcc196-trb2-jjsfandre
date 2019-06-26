@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 Cursor c = dbHelper.getCursorTarefaById(txtId.getText().toString());
 
                 Intent intent = new Intent(MainActivity.this, TarefaActivity.class);
-                intent.putExtra("id", txtId.getText().toString());
+                intent.putExtra("idTarefa", txtId.getText().toString());
 
                 startActivityForResult(intent, REQUEST_DETALHE_TAREFA);
             }
@@ -187,6 +187,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             switch (requestCode){
                 case REQUEST_DETALHE_TAREFA:
                     if (resultCode == Activity.RESULT_OK) {
+                        ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
+                        tAdapter.setCursor(dbHelper.getCursorTodasAsTarefas());
                         tAdapter.notifyDataSetChanged();
                     }
                     break;
