@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,8 @@ import br.ufjf.dcc196.todolist.Model.Tarefa;
 
 public class TarefaActivity extends AppCompatActivity {
 
+
+    public static final int REQUEST_ASSOCIAR_TAG= 700;
 
     final List<String> listaDificuldades = Helper.getListaDificuldades();;
     final List<String> listaStatusNomes = new ArrayList<>();
@@ -89,6 +92,18 @@ public class TarefaActivity extends AppCompatActivity {
 
                 setResult(RESULT_OK, resultado);
                 finish();
+            }
+        });
+        Button btnSaveAssociarTags = findViewById(R.id.btnSaveAssociarTags);
+
+        btnSaveAssociarTags.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(TarefaActivity.this, TarefaTagActivity.class);
+                intent.putExtra("idTarefa", tarefa.getId());
+
+                startActivityForResult(intent, REQUEST_ASSOCIAR_TAG);
             }
         });
 

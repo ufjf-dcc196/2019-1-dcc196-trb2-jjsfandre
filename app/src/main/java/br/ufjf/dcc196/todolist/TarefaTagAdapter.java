@@ -9,25 +9,44 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import br.ufjf.dcc196.todolist.Model.Tag;
 
-public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.ViewHolder> {
+public class TarefaTagAdapter extends RecyclerView.Adapter<TarefaTagAdapter.ViewHolder> {
     private Cursor cursor;
     private OnItemClickListener listener;
     private Context context;
+    private List<Tag> tags;
+    private List<Long> tagsIds;
 
     public interface OnItemClickListener{
         void onItemClick(View itemView, int position);
     }
 
-    public TarefaAdapter(Cursor c,Context context){
+    public TarefaTagAdapter(Cursor c, List<Tag> tags, Context context){
         cursor = c;
         this.context = context;
+        this.tags = tags;
+        this.tagsIds = new ArrayList<>();
+        populateListTagsIds();
+    }
+
+    public List<Long> getTagsIds(){
+        return tagsIds;
+    }
+
+    private void populateListTagsIds(){
+        for (Tag tag :
+                tags) {
+            tagsIds.add(tag.getId());
+        }
     }
 
     public void setContext(Context c){
@@ -44,7 +63,7 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.ViewHolder
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View linha = inflater.inflate(R.layout.tarefa_layout,parent,false);
+        View linha = inflater.inflate(R.layout.tarefa_tag_layout,parent,false);
         ViewHolder vh = new ViewHolder(linha);
         return vh;
     }
@@ -52,33 +71,21 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.ViewHolder
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        int idxId = cursor.getColumnIndexOrThrow(ToDoListContract.Tarefa._ID);
-        int idxTitulo = cursor.getColumnIndexOrThrow(ToDoListContract.Tarefa.COLLUMN_TITULO);
-        int idxStatus = cursor.getColumnIndexOrThrow(ToDoListContract.Tarefa.COLLUMN_STATUSID);
+        int idxId = cursor.getColumnIndexOrThrow(ToDoListContract.Tag._ID);
+        int idxTitulo = cursor.getColumnIndexOrThrow(ToDoListContract.Tag.COLLUMN_NOME);
         cursor.moveToPosition(i);
-        String titulo =cursor.getString(idxTitulo);
         viewHolder.txtId.setText(cursor.getLong(idxId)+"");
+        viewHolder.txtTitulo.setText(cursor.getString(idxTitulo));
+        viewHolder.checkBoxTarefaTag.setChecked(verifyIfTagIsChecked(cursor.getLong(idxId)));
+    }
 
-        ToDoListDBHelper dbHelper = new ToDoListDBHelper(context);
-        List<Tag> listTags = dbHelper.getListTagsByTarefa(cursor.getLong(idxId)+"");
-        List<String> sb = new ArrayList<>();
-
+    private boolean verifyIfTagIsChecked(Long id){
         for (Tag tag :
-                listTags) {
-            sb.add(tag.getNome());
+                tags) {
+            if (tag.getId().equals(id))
+                return true;
         }
-
-
-        String tags = "";
-        if (sb.size()>0){
-            tags = " ["+String.join(";",sb)+ "]";
-        }
-        titulo +=tags;
-
-        viewHolder.txtTitulo.setText(titulo);
-
-        viewHolder.txtStatus.setText(dbHelper.getStatusById(cursor.getLong(idxStatus)).getNome());
-
+        return false;
     }
 
     @Override
@@ -94,13 +101,24 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView txtTitulo;
         public TextView txtId;
-        public TextView txtStatus;
+        public CheckBox checkBoxTarefaTag;
 
         public ViewHolder(final View itemView){
             super(itemView);
-            txtTitulo = itemView.findViewById(R.id.txtTituloTarefa);
-            txtId = itemView.findViewById(R.id.txtIdTarefa);
-            txtStatus = itemView.findViewById(R.id.txtStatusTarefa);
+            txtTitulo = itemView.findViewById(R.id.txtTituloTag);
+            txtId = itemView.findViewById(R.id.txtIdTag);
+            checkBoxTarefaTag = itemView.findViewById(R.id.checkBoxTarefaTag);
+
+            checkBoxTarefaTag.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                    if (isChecked) {
+                        tagsIds.add(Long.parseLong(txtId.getText().toString()));
+                    } else {
+                        tagsIds.remove(tagsIds.indexOf(Long.parseLong(txtId.getText().toString())));
+                    }
+                }
+            });
 
             itemView.setOnClickListener(new View.OnClickListener(){
 
@@ -117,4 +135,3 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.ViewHolder
         }
     }
 }
-

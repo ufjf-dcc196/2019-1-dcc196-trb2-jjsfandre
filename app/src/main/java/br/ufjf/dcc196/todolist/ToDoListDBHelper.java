@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ import br.ufjf.dcc196.todolist.Model.Tag;
 import br.ufjf.dcc196.todolist.Model.Tarefa;
 
 public class ToDoListDBHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION=6;
+    public static final int DATABASE_VERSION=7;
     public static final String DATABASE_NAME="ToDoList";
 
     public ToDoListDBHelper(Context context){
@@ -132,7 +134,8 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         Log.i("DBINFO", "DEL titulo: " + titulo);
     }
 
-    public Cursor getCursorTagsByTarefa(String id){
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public List<Long> getCursorTagsByTarefa(String id){
         SQLiteDatabase db = this.getWritableDatabase();
         String selecaoTarefaTag = ToDoListContract.TarefaTag.COLLUMN_TAREFA + "= ?";
         String[] argsTarefaTag = {id};
@@ -141,15 +144,26 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         int idxTag = c.getColumnIndex(ToDoListContract.TarefaTag.COLLUMN_TAG);
         c.move(-1);
 
-        String[] argsTag = new String[c.getCount()];
+        List<Long> tagsIds = new ArrayList<>();
+
         while(c.moveToNext()){
             Long idTag = c.getLong(idxTag);
-            argsTag[c.getPosition()] = idTag+"";
+            tagsIds.add(idTag);
         }
-        String selecaoTag = ToDoListContract.Tag._ID + "= ?";
-        String sort = ToDoListContract.Tag.COLLUMN_NOME+ " ASC";
-        Cursor result = db.query(ToDoListContract.Tag.TABLE_NAME,camposTag,selecaoTag,argsTag,null,null,sort);
-        return result;
+        return tagsIds;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public List<Tag> getListTagsByTarefa(String id){
+        List<Long> listTagsIds = getCursorTagsByTarefa(id);
+
+        List<Tag> tags = new ArrayList<>();
+        for (Long idTag :
+                listTagsIds) {
+            tags.add(getTagById(idTag));
+        }
+
+        return tags;
     }
 
     public Cursor getCursorTarefasByTag(String id){
@@ -240,6 +254,10 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         return new Tarefa(idTarefa,titulo,descricao,dificuldade,statusId,dtHrLimite,dtHrAtualizacao);
     }
 
+    public Tag getTagById(Long id) {
+        return getTagById(id+"");
+    }
+
     public Tag getTagById(String id){
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -320,6 +338,26 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public void associarTags(String idTarefa, List<Long> tagsIds){
+        SQLiteDatabase db = this.getWritableDatabase();
+        cleanTags(idTarefa);
+        ContentValues values;
+        for (Long tagid :
+                tagsIds) {
+            values = new ContentValues();
+            values.put(ToDoListContract.TarefaTag.COLLUMN_TAG,tagid);
+            values.put(ToDoListContract.TarefaTag.COLLUMN_TAREFA,idTarefa);
+            db.insert(ToDoListContract.TarefaTag.TABLE_NAME,null,values);
+        }
+    }
+
+    public void cleanTags(String idTarefa){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String select = ToDoListContract.TarefaTag.COLLUMN_TAREFA+" = ?";
+
+        String[] selectArgs = {idTarefa};
+        db.delete(ToDoListContract.TarefaTag.TABLE_NAME,select,selectArgs);
+    }
 
     private final String[] camposTarefa = {
             ToDoListContract.Tarefa._ID,
