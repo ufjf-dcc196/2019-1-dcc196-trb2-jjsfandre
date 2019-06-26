@@ -187,19 +187,18 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     if (resultCode == Activity.RESULT_OK) {
                         ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
                         tAdapter.setCursor(dbHelper.getCursorTodasAsTarefas());
-                        tAdapter.notifyDataSetChanged();
                     }
                     break;
                 case REQUEST_NOVA_TAREFA:
                     if (resultCode == Activity.RESULT_OK) {
                         ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
                         tAdapter.setCursor(dbHelper.getCursorTodasAsTarefas());
-                        tAdapter.notifyDataSetChanged();
                     }
                     break;
                 case REQUEST_LISTAR_TAGS:
                     if (resultCode == Activity.RESULT_OK) {
-                        tAdapter.notifyDataSetChanged();
+                        ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
+                        tAdapter.setCursor(dbHelper.getCursorTodasAsTarefas());
                     }
                     break;
                 default:
@@ -231,11 +230,13 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     public void listarTags(){
-        Toast.makeText(this,"listarTags", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(MainActivity.this, TagActivity.class);
+
+        startActivityForResult(intent, REQUEST_LISTAR_TAGS);
     }
 
     public void adicionarTarefa(){
-        ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
 
         Intent intent = new Intent(MainActivity.this, NovaTarefaActivity.class);
 

@@ -121,6 +121,16 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         Log.i("DBINFO", "DEL titulo: " + titulo);
     }
 
+
+    public void deleteTagById(String id, String titulo){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String select = ToDoListContract.Tag._ID+" = ?";
+
+        String[] selectArgs = {id};
+        db.delete(ToDoListContract.Tag.TABLE_NAME,select,selectArgs);
+        Log.i("DBINFO", "DEL titulo: " + titulo);
+    }
+
     public Cursor getCursorTagsByTarefa(String id){
         SQLiteDatabase db = this.getWritableDatabase();
         String selecaoTarefaTag = ToDoListContract.TarefaTag.COLLUMN_TAREFA + "= ?";
@@ -260,6 +270,12 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
 
     }
 
+    public Cursor getCursorTodasAsTags(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sort = ToDoListContract.Tag.COLLUMN_NOME + " ASC";
+        Cursor c = db.query(ToDoListContract.Tag.TABLE_NAME, camposTag, null, null, null, null, sort);
+        return c;
+    }
 
 
     private final String[] camposTarefa = {
