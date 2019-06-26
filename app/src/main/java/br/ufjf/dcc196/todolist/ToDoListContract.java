@@ -45,11 +45,11 @@ public final class ToDoListContract {
 
     public static class TarefaTag implements BaseColumns {
         public static final String TABLE_NAME="TarefaTag";
-        public static final String COLLUMN_STATUS="statusid";
+        public static final String COLLUMN_TAG ="tagid";
         public static final String COLLUMN_TAREFA="tarefaid";
 
         public static final String CREATE_TABLE=String.format("CREATE TABLE %s (%s INTEGER," +
-                "%s INTEGER)",TABLE_NAME,COLLUMN_STATUS,COLLUMN_TAREFA
+                "%s INTEGER)",TABLE_NAME, COLLUMN_TAG,COLLUMN_TAREFA
         );
         public static final String DROP_TABLE=String.format("DROP TABLE %s", TABLE_NAME);
     }

@@ -9,8 +9,10 @@ import android.util.Log;
 
 import java.util.Date;
 
+import br.ufjf.dcc196.todolist.Model.Status;
+
 public class ToDoListDBHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION=4;
+    public static final int DATABASE_VERSION=5;
     public static final String DATABASE_NAME="ToDoList";
 
     public ToDoListDBHelper(Context context){
@@ -89,16 +91,6 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    private final String[] camposTarefa = {
-            ToDoListContract.Tarefa._ID,
-            ToDoListContract.Tarefa.COLLUMN_TITULO,
-            ToDoListContract.Tarefa.COLLUMN_DESCRICAO,
-            ToDoListContract.Tarefa.COLLUMN_DIFICULDADE,
-            ToDoListContract.Tarefa.COLLUMN_DTHORALIMITE,
-            ToDoListContract.Tarefa.COLLUMN_DTHORAATUALIZACAO,
-            ToDoListContract.Tarefa.COLLUMN_STATUSID
-    };
-
 
     public Cursor getCursorTarefaById(String id){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -125,5 +117,89 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         db.delete(ToDoListContract.Tarefa.TABLE_NAME,select,selectArgs);
         Log.i("DBINFO", "DEL titulo: " + titulo);
     }
+
+    public Cursor getCursorTagsByTarefa(String id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selecaoTarefaTag = ToDoListContract.TarefaTag.COLLUMN_TAREFA + "= ?";
+        String[] argsTarefaTag = {id};
+
+        Cursor c = db.query(ToDoListContract.TarefaTag.TABLE_NAME,camposTarefaTag,selecaoTarefaTag,argsTarefaTag,null,null,null);
+        int idxTag = c.getColumnIndex(ToDoListContract.TarefaTag.COLLUMN_TAG);
+        c.move(-1);
+
+        String[] argsTag = new String[c.getCount()];
+        while(c.moveToNext()){
+            Long idTag = c.getLong(idxTag);
+            argsTag[c.getPosition()] = idTag+"";
+        }
+        String selecaoTag = ToDoListContract.Tag._ID + "= ?";
+        String sort = ToDoListContract.Tag.COLLUMN_NOME+ " ASC";
+        Cursor result = db.query(ToDoListContract.Tag.TABLE_NAME,camposTag,selecaoTag,argsTag,null,null,sort);
+        return result;
+    }
+
+    public Cursor getCursorTarefasByTag(String id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selecaoTarefaTag = ToDoListContract.TarefaTag.COLLUMN_TAG + "= ?";
+        String[] argsTarefaTag = {id};
+
+        Cursor c = db.query(ToDoListContract.TarefaTag.TABLE_NAME,camposTarefaTag,selecaoTarefaTag,argsTarefaTag,null,null,null);
+        int idxTarefa = c.getColumnIndex(ToDoListContract.TarefaTag.COLLUMN_TAREFA);
+        c.move(-1);
+
+        String[] argsTarefa = new String[c.getCount()];
+        while(c.moveToNext()){
+            Long idTarefa = c.getLong(idxTarefa);
+            argsTarefa[c.getPosition()] = idTarefa+"";
+        }
+        String selecaoTarefa = ToDoListContract.Tarefa._ID + "= ?";
+        String sort = ToDoListContract.Tarefa.COLLUMN_STATUSID + " ASC";
+        Cursor result = db.query(ToDoListContract.Tarefa.TABLE_NAME,camposTarefa,selecaoTarefa,argsTarefa,null,null,sort);
+        return result;
+    }
+
+    public Status getStatusById(Long id){
+        return getStatusById(id+"");
+    }
+
+    public Status getStatusById(String id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selecao = ToDoListContract.Status._ID+ "= ?";
+        String[] args = {id};
+
+        Cursor c = db.query(ToDoListContract.Status.TABLE_NAME,camposStatus,selecao,args,null,null,null);
+        c.moveToFirst();
+        int idxId = c.getColumnIndex(ToDoListContract.Status._ID);
+        int idxNome = c.getColumnIndex(ToDoListContract.Status.COLLUMN_NOME);
+
+        Status status = new Status();
+        status.setId(c.getLong(idxId));
+        status.setNome(c.getString(idxNome));
+        return status;
+    }
+
+
+
+    private final String[] camposTarefa = {
+            ToDoListContract.Tarefa._ID,
+            ToDoListContract.Tarefa.COLLUMN_TITULO,
+            ToDoListContract.Tarefa.COLLUMN_DESCRICAO,
+            ToDoListContract.Tarefa.COLLUMN_DIFICULDADE,
+            ToDoListContract.Tarefa.COLLUMN_DTHORALIMITE,
+            ToDoListContract.Tarefa.COLLUMN_DTHORAATUALIZACAO,
+            ToDoListContract.Tarefa.COLLUMN_STATUSID
+    };
+    private final String[] camposTarefaTag = {
+            ToDoListContract.TarefaTag.COLLUMN_TAG,
+            ToDoListContract.TarefaTag.COLLUMN_TAREFA
+    };
+    private final String[] camposTag = {
+            ToDoListContract.Tag._ID,
+            ToDoListContract.Tag.COLLUMN_NOME
+    };
+    private final String[] camposStatus = {
+            ToDoListContract.Status._ID,
+            ToDoListContract.Status.COLLUMN_NOME
+    };
 
 }

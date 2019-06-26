@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         final RecyclerView rv = findViewById(R.id.rvTarefas);
         ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
 
-        tAdapter = new TarefaAdapter(dbHelper.getCursorTodasAsTarefas());
+        tAdapter = new TarefaAdapter(dbHelper.getCursorTodasAsTarefas(),getApplicationContext());
         tAdapter.setOnItemClickListener(listenerEditTarefa);
         rv.setAdapter(tAdapter);
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     dbHelper.deleteTarefaById(txtId.getText().toString(), txtTitulo.getText().toString());
 
                     tAdapter.setCursor(dbHelper.getCursorTodasAsTarefas());
-                    tAdapter.notifyItemRemoved(position); 
+                    tAdapter.notifyItemRemoved(position);
                 }
             };
 
