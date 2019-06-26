@@ -240,6 +240,23 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         return new Tarefa(idTarefa,titulo,descricao,dificuldade,statusId,dtHrLimite,dtHrAtualizacao);
     }
 
+    public Tag getTagById(String id){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selecao = ToDoListContract.Tag._ID+ "= ?";
+        String[] args = {id};
+        Cursor c = db.query(ToDoListContract.Tag.TABLE_NAME,camposTag,selecao,args,null,null,null);
+        int idxId = c.getColumnIndex(ToDoListContract.Tag._ID);
+        int idxNome = c.getColumnIndex(ToDoListContract.Tag.COLLUMN_NOME);
+        c.moveToFirst();
+
+        Long idTag = c.getLong(idxId);
+        String nome = c.getString(idxNome);
+
+        return new Tag(idTag,nome);
+
+    }
+
     public void atualizarTarefa(Tarefa t){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = populateContentValueTarefa(t);
@@ -248,6 +265,16 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         String[] args = {t.getId()+""};
 
         db.update(ToDoListContract.Tarefa.TABLE_NAME,values,selecao, args);
+    }
+
+    public void atualizarTag(Tag t){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = populateContentValueTag(t);
+
+        String selecao = ToDoListContract.Tag._ID+ "= ?";
+        String[] args = {t.getId()+""};
+
+        db.update(ToDoListContract.Tag.TABLE_NAME,values,selecao, args);
     }
 
     public void inserirTarefa(Tarefa t){
