@@ -2,13 +2,14 @@ package br.ufjf.dcc196.todolist;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.Date;
 
 public class ToDoListDBHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION=3;
+    public static final int DATABASE_VERSION=4;
     public static final String DATABASE_NAME="ToDoList";
 
     public ToDoListDBHelper(Context context){
@@ -36,11 +37,11 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(ToDoListContract.Status.COLLUMN_NOME,"A fazer");
         long newid = db.insert(ToDoListContract.Status.TABLE_NAME,null,values);
-        values.put(ToDoListContract.Status.COLLUMN_NOME,"Em execução");
-        db.insert(ToDoListContract.Status.TABLE_NAME,null,values);
         values.put(ToDoListContract.Status.COLLUMN_NOME,"Bloqueada");
         db.insert(ToDoListContract.Status.TABLE_NAME,null,values);
         values.put(ToDoListContract.Status.COLLUMN_NOME,"Concluída");
+        db.insert(ToDoListContract.Status.TABLE_NAME,null,values);
+        values.put(ToDoListContract.Status.COLLUMN_NOME,"Em execução");
         db.insert(ToDoListContract.Status.TABLE_NAME,null,values);
 
         return newid;
@@ -86,4 +87,33 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         db.execSQL(ToDoListContract.TarefaTag.DROP_TABLE);
         onCreate(db);
     }
+
+    private final String[] camposTarefa = {
+            ToDoListContract.Tarefa._ID,
+            ToDoListContract.Tarefa.COLLUMN_TITULO,
+            ToDoListContract.Tarefa.COLLUMN_DESCRICAO,
+            ToDoListContract.Tarefa.COLLUMN_DIFICULDADE,
+            ToDoListContract.Tarefa.COLLUMN_DTHORALIMITE,
+            ToDoListContract.Tarefa.COLLUMN_DTHORAATUALIZACAO,
+            ToDoListContract.Tarefa.COLLUMN_STATUSID
+    };
+
+
+    public Cursor getCursorTarefaById(String id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selecao = ToDoListContract.Tarefa.COLLUMN_TITULO + " = ?";
+        String[] args = {id};
+
+        Cursor c = db.query(ToDoListContract.Tarefa.TABLE_NAME, camposTarefa, selecao, args, null, null, null);
+        return c;
+    }
+
+
+    public Cursor getCursorTodasAsTarefas(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sort = ToDoListContract.Tarefa.COLLUMN_STATUSID + " ASC";
+        Cursor c = db.query(ToDoListContract.Tarefa.TABLE_NAME, camposTarefa, null, null, null, null, sort);
+        return c;
+    };
+
 }

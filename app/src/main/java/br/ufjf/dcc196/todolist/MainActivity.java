@@ -1,23 +1,22 @@
 package br.ufjf.dcc196.todolist;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.Cursor;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import android.widget.TextView;
-
-import br.ufjf.dcc196.todolist.Model.*;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
+    /*
     private void listAllData(){
         ToDoListDBHelper helper = new ToDoListDBHelper(getApplicationContext());
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -112,14 +111,73 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         }
         TextView txtOutput = findViewById(R.id.txtStatus);
         txtOutput.setText(tags.toString());
-    }
+    } */
+
+
+    public TarefaAdapter tAdapter;
+
+    public static final int REQUEST_LISTAR_TAGS = 100;
+    public static final int REQUEST_DETALHE_TAREFA = 200;
+    public static final int REQUEST_NOVA_TAREFA = 300;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        listAllData();
 
+
+
+        final RecyclerView rv = findViewById(R.id.rvTarefas);
+        ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
+
+        tAdapter = new TarefaAdapter(dbHelper.getCursorTodasAsTarefas());
+        tAdapter.setOnItemClickListener(new TarefaAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                /*Intent intent = new Intent(PlanejamentosActivity.this, DisciplinasCursadasActivity.class);
+                intent.putExtra("planejamento", planejamentosList.get(position));
+                intent.putExtra("index", position); */
+
+                ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
+                TextView txtId = (TextView) itemView.findViewById(R.id.txtIdTarefa);
+
+                Cursor c = dbHelper.getCursorTarefaById(txtId.getText().toString());
+
+                Intent intent = new Intent(MainActivity.this, TarefaActivity.class);
+                intent.putExtra("id", txtId.getText().toString());
+
+                startActivityForResult(intent, REQUEST_DETALHE_TAREFA);
+            }
+        });
+        rv.setAdapter(tAdapter);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (data != null) {
+            switch (requestCode){
+                case REQUEST_DETALHE_TAREFA:
+                    if (resultCode == Activity.RESULT_OK) {
+                        tAdapter.notifyDataSetChanged();
+                    }
+                    break;
+                case REQUEST_NOVA_TAREFA:
+                    if (resultCode == Activity.RESULT_OK) {
+                        tAdapter.notifyDataSetChanged();
+                    }
+                    break;
+                case REQUEST_LISTAR_TAGS:
+                    if (resultCode == Activity.RESULT_OK) {
+                        tAdapter.notifyDataSetChanged();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     public void showMenu(View v){
