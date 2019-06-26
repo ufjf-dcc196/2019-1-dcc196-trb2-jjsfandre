@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.Date;
 
@@ -101,7 +102,7 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
 
     public Cursor getCursorTarefaById(String id){
         SQLiteDatabase db = this.getWritableDatabase();
-        String selecao = ToDoListContract.Tarefa.COLLUMN_TITULO + " = ?";
+        String selecao = ToDoListContract.Tarefa._ID + " = ?";
         String[] args = {id};
 
         Cursor c = db.query(ToDoListContract.Tarefa.TABLE_NAME, camposTarefa, selecao, args, null, null, null);
@@ -114,6 +115,15 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         String sort = ToDoListContract.Tarefa.COLLUMN_STATUSID + " ASC";
         Cursor c = db.query(ToDoListContract.Tarefa.TABLE_NAME, camposTarefa, null, null, null, null, sort);
         return c;
-    };
+    }
+
+    public void deleteTarefaById(String id, String titulo){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String select = ToDoListContract.Tarefa._ID+" = ?";
+
+        String[] selectArgs = {id};
+        db.delete(ToDoListContract.Tarefa.TABLE_NAME,select,selectArgs);
+        Log.i("DBINFO", "DEL titulo: " + titulo);
+    }
 
 }

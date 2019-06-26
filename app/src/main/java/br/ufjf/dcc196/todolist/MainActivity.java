@@ -131,12 +131,16 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
 
         tAdapter = new TarefaAdapter(dbHelper.getCursorTodasAsTarefas());
-        tAdapter.setOnItemClickListener(new TarefaAdapter.OnItemClickListener() {
+        tAdapter.setOnItemClickListener(listenerEditTarefa);
+        rv.setAdapter(tAdapter);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
+    }
+
+    private TarefaAdapter.OnItemClickListener listenerEditTarefa =
+        new TarefaAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
-                /*Intent intent = new Intent(PlanejamentosActivity.this, DisciplinasCursadasActivity.class);
-                intent.putExtra("planejamento", planejamentosList.get(position));
-                intent.putExtra("index", position); */
 
                 ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
                 TextView txtId = (TextView) itemView.findViewById(R.id.txtIdTarefa);
@@ -148,12 +152,22 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
                 startActivityForResult(intent, REQUEST_DETALHE_TAREFA);
             }
-        });
-        rv.setAdapter(tAdapter);
-        rv.setLayoutManager(new LinearLayoutManager(this));
+        };
 
-    }
+    private TarefaAdapter.OnItemClickListener listenerDeleteTarefa =
+            new TarefaAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View itemView, int position) {
 
+                    ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
+                    TextView txtId = (TextView) itemView.findViewById(R.id.txtIdTarefa);
+                    TextView txtTitulo = (TextView) itemView.findViewById(R.id.txtTituloTarefa);
+                    dbHelper.deleteTarefaById(txtId.getText().toString(), txtTitulo.getText().toString());
+
+                    tAdapter.setCursor(dbHelper.getCursorTodasAsTarefas());
+                    tAdapter.notifyItemRemoved(position);
+                }
+            };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

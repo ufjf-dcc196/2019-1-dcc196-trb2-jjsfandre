@@ -32,7 +32,7 @@
         android:layout_marginTop="30dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="120dp"
+        android:layout_marginBottom="70dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -62,5 +62,21 @@
         app:pressedTranslationZ="0dp"
         app:rippleColor="#00F08484"
         app:srcCompat="@mipmap/open_menu_foreground" />
+
+    <Switch
+        android:id="@+id/switchExcluir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="200dp"
+        android:layout_marginLeft="200dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="8dp"
+        android:text="Excluir tarefas ao clicar"
+        app:layout_constraintBottom_toTopOf="@+id/rvTarefas"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tituloTarefas" />
 
 </android.support.constraint.ConstraintLayout>
