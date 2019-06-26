@@ -1,20 +1,22 @@
 package br.ufjf.dcc196.todolist;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.Cursor;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import android.widget.TextView;
 
 import br.ufjf.dcc196.todolist.Model.*;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     private void listAllData(){
         ToDoListDBHelper helper = new ToDoListDBHelper(getApplicationContext());
@@ -119,4 +121,36 @@ public class MainActivity extends AppCompatActivity {
         listAllData();
 
     }
+
+    public void showMenu(View v){
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(this);
+        popup.inflate(R.menu.main_menu);
+        popup.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        switch(menuItem.getItemId()){
+            case R.id.addTarefa:
+                adicionarTarefa();
+                return true;
+            case R.id.listTags:
+                listarTags();
+                return true;
+            default:
+                return false;
+        }
+
+    }
+
+    public void listarTags(){
+        Toast.makeText(this,"listarTags", Toast.LENGTH_SHORT).show();
+    }
+
+    public void adicionarTarefa(){
+        Toast.makeText(this,"adicionarTarefa", Toast.LENGTH_SHORT).show();
+    }
+
+
 }
