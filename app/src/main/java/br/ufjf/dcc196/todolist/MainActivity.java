@@ -157,8 +157,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
                 TextView txtId = (TextView) itemView.findViewById(R.id.txtIdTarefa);
 
-                Cursor c = dbHelper.getCursorTarefaById(txtId.getText().toString());
-
                 Intent intent = new Intent(MainActivity.this, TarefaActivity.class);
                 intent.putExtra("idTarefa", txtId.getText().toString());
 
@@ -194,6 +192,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     break;
                 case REQUEST_NOVA_TAREFA:
                     if (resultCode == Activity.RESULT_OK) {
+                        ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
+                        tAdapter.setCursor(dbHelper.getCursorTodasAsTarefas());
                         tAdapter.notifyDataSetChanged();
                     }
                     break;
@@ -235,7 +235,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     public void adicionarTarefa(){
-        Toast.makeText(this,"adicionarTarefa", Toast.LENGTH_SHORT).show();
+        ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
+
+        Intent intent = new Intent(MainActivity.this, NovaTarefaActivity.class);
+
+        startActivityForResult(intent, REQUEST_NOVA_TAREFA);
     }
 
 

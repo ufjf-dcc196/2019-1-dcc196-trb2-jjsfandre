@@ -15,10 +15,9 @@ import java.util.List;
 import br.ufjf.dcc196.todolist.Model.Status;
 import br.ufjf.dcc196.todolist.Model.Tarefa;
 
-public class TarefaActivity extends AppCompatActivity {
+public class NovaTarefaActivity extends AppCompatActivity {
 
-
-    final List<String> listaDificuldades = Helper.getListaDificuldades();;
+    final List<String> listaDificuldades = Helper.getListaDificuldades();
     final List<String> listaStatusNomes = new ArrayList<>();
     final List<Long> listaStatusIds = new ArrayList<>();
     Tarefa tarefa;
@@ -28,21 +27,19 @@ public class TarefaActivity extends AppCompatActivity {
     public Spinner dificuldade;
     public Spinner status;
     public EditText dtHrLimite;
-    public EditText ultimaAtt;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tarefa);
+        setContentView(R.layout.activity_nova_tarefa);
+
         ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
 
-        titulo = findViewById(R.id.editTituloDetalhe);
-        descricao = findViewById(R.id.editDescricaoDetalhe);
-        dificuldade = findViewById(R.id.editDificuldadeDetalhe);
-        status = findViewById(R.id.editStatusDetalhe);
-        dtHrLimite = findViewById(R.id.editDtHrLimiteDetalhe);
-        ultimaAtt = findViewById(R.id.editUltimaAttDetalhe);
+        titulo = findViewById(R.id.editTituloNovo);
+        descricao = findViewById(R.id.editDescricaoNovo);
+        dificuldade = findViewById(R.id.editDificuldadeNovo);
+        status = findViewById(R.id.editStatusNovo);
+        dtHrLimite = findViewById(R.id.editDtHrLimiteNovo);
 
         List<Status> listaStatus = dbHelper.getAllStatusList();
         for (Status s :
@@ -51,14 +48,6 @@ public class TarefaActivity extends AppCompatActivity {
             listaStatusIds.add(s.getId());
         }
 
-        String id = getIntent().getStringExtra("idTarefa");
-        tarefa = dbHelper.getTarefaById(id);
-
-        titulo.setText(tarefa.getTitulo());
-        descricao.setText(tarefa.getDescricao());
-        dtHrLimite.setText(tarefa.getDataHoraLimite());
-        ultimaAtt.setText(tarefa.getDataHoraAtualizacao());
-
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, listaStatusNomes);
         ArrayAdapter<String> dificuldadeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, listaDificuldades);
 
@@ -66,15 +55,13 @@ public class TarefaActivity extends AppCompatActivity {
         status.setAdapter(statusAdapter);
 
 
-        dificuldade.setSelection(dificuldadeAdapter.getPosition(tarefa.getDificuldade()+""));
-        status.setSelection(listaStatusIds.indexOf(tarefa.getStatusId()));
-        Button btnSaveDetalheTarefa = findViewById(R.id.btnSaveDetalheTarefa);
+        Button btnSaveNovaTarefa = findViewById(R.id.btnSaveNovaTarefa);
 
-        btnSaveDetalheTarefa.setOnClickListener(new View.OnClickListener() {
+        btnSaveNovaTarefa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ToDoListDBHelper dbHelper = new ToDoListDBHelper(getApplicationContext());
-
+                tarefa = new Tarefa();
                 tarefa.setTitulo(titulo.getText().toString());
                 tarefa.setDescricao(descricao.getText().toString());
                 tarefa.setDataHoraLimite(dtHrLimite.getText().toString());
@@ -83,7 +70,8 @@ public class TarefaActivity extends AppCompatActivity {
                 tarefa.setStatusId(listaStatusIds.get(listaStatusNomes.indexOf(status.getSelectedItem())));
 
 
-                dbHelper.atualizarTarefa(tarefa);
+                dbHelper.inserirTarefa(tarefa);
+
                 Intent resultado = new Intent();
 
 
@@ -91,7 +79,5 @@ public class TarefaActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
     }
 }

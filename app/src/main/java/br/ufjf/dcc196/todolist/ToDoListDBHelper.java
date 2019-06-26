@@ -231,6 +231,23 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
 
     public void atualizarTarefa(Tarefa t){
         SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = populateContentValueTarefa(t);
+
+        String selecao = ToDoListContract.Tarefa._ID+ "= ?";
+        String[] args = {t.getId()+""};
+
+        db.update(ToDoListContract.Tarefa.TABLE_NAME,values,selecao, args);
+    }
+
+    public void inserirTarefa(Tarefa t){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = populateContentValueTarefa(t);
+
+        db.insert(ToDoListContract.Tarefa.TABLE_NAME,null,values);
+    }
+
+    private ContentValues populateContentValueTarefa(Tarefa t){
+
         ContentValues values = new ContentValues();
         values.put(ToDoListContract.Tarefa.COLLUMN_TITULO,t.getTitulo());
         values.put(ToDoListContract.Tarefa.COLLUMN_DESCRICAO,t.getDescricao());
@@ -239,11 +256,9 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         values.put(ToDoListContract.Tarefa.COLLUMN_DTHORAATUALIZACAO,Helper.getDataHoraAtualFormatada());
         values.put(ToDoListContract.Tarefa.COLLUMN_STATUSID,t.getStatusId());
 
-        String selecao = ToDoListContract.Tarefa._ID+ "= ?";
-        String[] args = {t.getId()+""};
+        return values;
 
-        db.update(ToDoListContract.Tarefa.TABLE_NAME,values,selecao, args);
-    };
+    }
 
 
 
