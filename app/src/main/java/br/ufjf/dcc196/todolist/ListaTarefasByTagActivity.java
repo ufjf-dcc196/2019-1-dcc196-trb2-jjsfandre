@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 public class ListaTarefasByTagActivity extends AppCompatActivity {
-    public TarefaAdapter tAdapter;
+    public TarefaByTagAdapter tAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +21,7 @@ public class ListaTarefasByTagActivity extends AppCompatActivity {
 
         TextView infoTagList = findViewById(R.id.infoTagList);
         infoTagList.setText("Tarefas que contém a etiqueta "+tituloTag);
-        tAdapter = new TarefaAdapter(dbHelper.getCursorTarefasByTag(id),getApplicationContext());
+        tAdapter = new TarefaByTagAdapter(dbHelper.getListTarefasByTag(id),getApplicationContext());
         rv.setAdapter(tAdapter);
         rv.setLayoutManager(new LinearLayoutManager(this));
     }

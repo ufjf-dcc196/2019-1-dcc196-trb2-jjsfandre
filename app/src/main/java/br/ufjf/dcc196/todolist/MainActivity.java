@@ -243,5 +243,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         startActivityForResult(intent, REQUEST_NOVA_TAREFA);
     }
 
-
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        tAdapter.notifyDataSetChanged();
+    }
 }

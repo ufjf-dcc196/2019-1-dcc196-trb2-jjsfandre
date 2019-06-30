@@ -13,74 +13,59 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="2dp"
+        android:layout_marginBottom="112dp"
         android:text="Etiquetas"
         android:textSize="30sp"
         app:fontFamily="@font/chelsea_market"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.047" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/tituloTags"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
-        <LinearLayout
-            android:id="@+id/linearLayout2"
+        <Switch
+            android:id="@+id/switchEditarTag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="180dp"
-            android:layout_marginBottom="8dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:collapseColumns="*"
-            android:stretchColumns="*">
+            android:layout_weight="-1"
+            android:text="Editar ao clicar"
+            android:textColorHighlight="#00564A"
+            android:textColorLink="#008477" />
 
+    </LinearLayout>
 
-            <Switch
-                android:id="@+id/switchExcluirTag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="200dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="0"
-                android:text="Excluir ao clicar"
-                android:textColorHighlight="#00564A"
-                android:textColorLink="#008477" />
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="0"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/rvTags"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout"
+        <Switch
+            android:id="@+id/switchExcluirTag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:collapseColumns="*"
-            android:stretchColumns="*">
-
-
-            <Switch
-                android:id="@+id/switchEditarTag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="200dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginBottom="8dp"
-                android:layout_weight="-1"
-                android:text="Editar ao clicar"
-                android:textColorHighlight="#00564A"
-                android:textColorLink="#008477" />
-
-        </LinearLayout>
+            android:layout_weight="0"
+            android:text="Excluir ao clicar"
+            android:textColorHighlight="#00564A"
+            android:textColorLink="#008477" />
     </LinearLayout>
 
 
@@ -88,17 +73,12 @@
         android:id="@+id/rvTags"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tituloTags" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton2"
         android:layout_width="wrap_content"

@@ -35,18 +35,10 @@ public class TarefaTagAdapter extends RecyclerView.Adapter<TarefaTagAdapter.View
         this.context = context;
         this.tags = tags;
         this.tagsIds = new ArrayList<>();
-        populateListTagsIds();
     }
 
     public List<Long> getTagsIds(){
         return tagsIds;
-    }
-
-    private void populateListTagsIds(){
-        for (Tag tag :
-                tags) {
-            tagsIds.add(tag.getId());
-        }
     }
 
     public void setContext(Context c){

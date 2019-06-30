@@ -18,7 +18,7 @@ import br.ufjf.dcc196.todolist.Model.Tag;
 import br.ufjf.dcc196.todolist.Model.Tarefa;
 
 public class ToDoListDBHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION=7;
+    public static final int DATABASE_VERSION=8;
     public static final String DATABASE_NAME="ToDoList";
 
     public ToDoListDBHelper(Context context){
@@ -160,13 +160,15 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         List<Tag> tags = new ArrayList<>();
         for (Long idTag :
                 listTagsIds) {
-            tags.add(getTagById(idTag));
+            Tag tag = getTagById(idTag);
+            if (tag != null)
+                tags.add(tag);
         }
 
         return tags;
     }
 
-    public Cursor getCursorTarefasByTag(String id){
+    public List<Long> getCursorTarefasByTag(String id){
         SQLiteDatabase db = this.getWritableDatabase();
         String selecaoTarefaTag = ToDoListContract.TarefaTag.COLLUMN_TAG + "= ?";
         String[] argsTarefaTag = {id};
@@ -175,14 +177,26 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         int idxTarefa = c.getColumnIndex(ToDoListContract.TarefaTag.COLLUMN_TAREFA);
         c.move(-1);
 
-        String[] argsTarefa = new String[c.getCount()];
+        List<Long> listIdsTarefa = new ArrayList<>();
         while(c.moveToNext()){
             Long idTarefa = c.getLong(idxTarefa);
-            argsTarefa[c.getPosition()] = idTarefa+"";
+            listIdsTarefa.add(idTarefa);
         }
-        String selecaoTarefa = ToDoListContract.Tarefa._ID + "= ?";
+        /*String selecaoTarefa = ToDoListContract.Tarefa._ID + "= ?";
         String sort = ToDoListContract.Tarefa.COLLUMN_STATUSID + " ASC";
-        Cursor result = db.query(ToDoListContract.Tarefa.TABLE_NAME,camposTarefa,selecaoTarefa,argsTarefa,null,null,sort);
+        Cursor result = db.query(ToDoListContract.Tarefa.TABLE_NAME,camposTarefa,selecaoTarefa,argsTarefa,null,null,sort);*/
+        return listIdsTarefa;
+    }
+
+    public List<Tarefa> getListTarefasByTag(String id){
+        
+        List<Tarefa> result = new ArrayList<>();
+        List<Long> listIdsTarefas = getCursorTarefasByTag(id);
+
+        for (Long idTarefa :
+                listIdsTarefas) {
+            result.add(getTarefaById(idTarefa+""));
+        }
         return result;
     }
 
@@ -267,11 +281,14 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         int idxId = c.getColumnIndex(ToDoListContract.Tag._ID);
         int idxNome = c.getColumnIndex(ToDoListContract.Tag.COLLUMN_NOME);
         c.moveToFirst();
+        if (c.getCount()>0){
 
-        Long idTag = c.getLong(idxId);
-        String nome = c.getString(idxNome);
+            Long idTag = c.getLong(idxId);
+            String nome = c.getString(idxNome);
 
-        return new Tag(idTag,nome);
+            return new Tag(idTag,nome);
+        }
+        return null;
 
     }
 

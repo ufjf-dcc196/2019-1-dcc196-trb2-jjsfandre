@@ -1,6 +1,8 @@
 package br.ufjf.dcc196.todolist;
 
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +19,7 @@ public class TarefaTagActivity extends AppCompatActivity {
     public TarefaTagAdapter tAdapter;
     String idTarefa;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
