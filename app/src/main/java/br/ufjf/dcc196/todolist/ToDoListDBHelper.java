@@ -18,7 +18,7 @@ import br.ufjf.dcc196.todolist.Model.Tag;
 import br.ufjf.dcc196.todolist.Model.Tarefa;
 
 public class ToDoListDBHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION=8;
+    public static final int DATABASE_VERSION=9;
     public static final String DATABASE_NAME="ToDoList";
 
     public ToDoListDBHelper(Context context){
@@ -119,6 +119,8 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String select = ToDoListContract.Tarefa._ID+" = ?";
 
+        cleanTags(id);
+
         String[] selectArgs = {id};
         db.delete(ToDoListContract.Tarefa.TABLE_NAME,select,selectArgs);
         Log.i("DBINFO", "DEL titulo: " + titulo);
@@ -128,6 +130,8 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
     public void deleteTagById(String id, String titulo){
         SQLiteDatabase db = this.getWritableDatabase();
         String select = ToDoListContract.Tag._ID+" = ?";
+
+        cleanTarefas(id);
 
         String[] selectArgs = {id};
         db.delete(ToDoListContract.Tag.TABLE_NAME,select,selectArgs);
@@ -373,6 +377,13 @@ public class ToDoListDBHelper extends SQLiteOpenHelper {
         String select = ToDoListContract.TarefaTag.COLLUMN_TAREFA+" = ?";
 
         String[] selectArgs = {idTarefa};
+        db.delete(ToDoListContract.TarefaTag.TABLE_NAME,select,selectArgs);
+    }
+    public void cleanTarefas(String idTag){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String select = ToDoListContract.TarefaTag.COLLUMN_TAG+" = ?";
+
+        String[] selectArgs = {idTag};
         db.delete(ToDoListContract.TarefaTag.TABLE_NAME,select,selectArgs);
     }
 
